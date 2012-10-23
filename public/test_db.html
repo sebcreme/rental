@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+
+<body id="test_db" >
+<script type="text/javascript" charset="utf-8">
+	var test = {
+		db : null,
+		executeSql : function(query, values, handler, onErrorHandler){
+			if (this.db == null) {
+				//log('Trying to execute SQL statement before a database is loaded.');
+				throw new Error('Lucky has not yet loaded a database!');
+			}
+
+			wrappedOnErrorHandler = function(tx, error){
+				console.log('SQL Error (code: '+error.code+' - \''+error.message+'\') when executing a SQL statement : query: '+ '\''+ query +'\''+ ' values: \''+values+'\'' )
+				if (onErrorHandler) onErrorHandler(tx, error);
+			} 
+
+			this.db.transaction(function (tx)
+			{
+				tx.executeSql(query, values, handler, wrappedOnErrorHandler);
+			});
+		},
+		init : function(){
+			this.db =  openDatabase('docs', '', 'Offline document storage', 20000, function(db){alert('creation')}, function(){alert('error')})			
+			//this.executeSql('CREATE TABLE docs(id INT, name TXT)',null, function(){alert('ok')})
+			//this.db.changeVersion('1.0', '2.0', function(){alert('callback1')}, function(){alert('callback2')}, function(){alert('callback3')})
+		},
+		addDoc1 : function(){
+			if (this.db){
+				this.db.transaction(function(tx){
+					var query= 'INSERT INTO docs (id, name) VALUES (?, ?)'
+					var values = [1,'Document1']
+					test.executeSql(query, values,function(){alert('ok')} )
+				})
+			}
+		},
+		
+	}
+	test.init();
+</script>	
+</body>

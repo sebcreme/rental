@@ -1,0 +1,44 @@
+#{extends 'main.html' /}
+<div id="rental-detail" class="rental">
+    <h1>${rental.name}</h1>
+    #{if rental.address}
+        <h2><a href="http://maps.google.com/?q=${rental.address}, Paris France">${rental.address}</a></h2>
+    #{/if}
+    
+    <p>
+        ${rental?.text.raw()}
+        %{
+        TimeZone tz = TimeZone.getTimeZone('Europe/Paris')
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMMM yyyy HH:mm")
+        sdf.setTimeZone(tz)
+        }%
+        <br/><span class="date">${sdf.format(rental.when)}</span> - 
+        #{if rental.suggested}
+           <strong>&hearts;</strong><a id="sban" href="unban/${rental.id}">Suivre</a> - 
+        #{/if}
+        <strong>&${rental.banned? 'hearts' : '#9760'};</strong><a id="ban" href="${rental.banned ?'un':''}ban/${rental.id}">${rental.banned ? 'Suivre' : 'Rejeter'}</a> - 
+        
+        <strong>&#9998;</strong><a href="@{Rentals.show(rental.id)}">Editer</a> - 
+        #{if rental.type == 'PAP' || rental.type==null}
+        <a href="http://www.pap.fr/annonce/r${rental.externalId}">Voir sur PAP</a>
+        #{/if}
+        #{else}
+        <a href="http://www.leboncoin.fr/locations/${rental.externalId}.htm">Voir sur Le Bon Coin</a>
+        #{/else}
+        
+    </p>
+    #{list items:rental.notes, as:'note'}
+        <p class="comment">${note.note} <span class="date">${sdf.format(note.addedAt)}</span></p>
+    #{/list}
+   
+    <form onsubmit="return Moving.addComment(${rental.id})">
+    <p class="comment">
+        <input type="text" placeholder="Ecrire un commentaire"/>
+        <input type="submit" value="save"/>
+    </p>
+    </form>
+    
+    
+    
+       
+</div>

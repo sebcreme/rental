@@ -1,0 +1,12 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <body id="mail" onload="">
+        <p>De nouvelles annonces ont été récupérées :</p>
+        <ul>
+            #{list items:rentals, as:'rental'}
+                <li><a href="http://maison.sebcreme.fr@{Application.rental(rental.id)}">${rental.name}</a><p>${rental.text?.raw()}</p></li>
+            #{/list}
+        </ul>
+         
+    </body>
+</html>

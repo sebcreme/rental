@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/main.css'}" />
+<link rel="stylesheet" type="text/css" media="screen" href="@{'/public/stylesheets/jquery.rating.css'}" />
+        <link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}" />
+        <script src="@{'/public/javascripts/jquery-1.3.2.min.js'}" type="text/javascript" charset="utf-8"></script>
+		<script src="@{'/public/javascripts/moving.js'}" type="text/javascript" charset="utf-8"></script>
+		<script src="@{'/public/javascripts/jquery.rating.pack.js'}" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <body>
+        <div class="header">
+        	Need to find another flat
+        	<br/>
+        	#{if request.actionMethod =='index'}&hearts; Suivies &hearts; #{/if}
+        	#{if request.actionMethod =='banned'}&#9760; Bannies &#9760;#{/if}
+        	#{if request.actionMethod =='suggestion'}&#9733; Suggestions &#9733;#{/if}
+        </div>
+		<div class="menu">
+		    <a href="@{Application.index}" #{if request.action.contains('index')||(rental && !rental?.banned && !rental?.suggested)} class="selected"#{/if}>&hearts; Les annonces suivies (<span id="live">${followedCount}</span>)	</a>
+			<a href="@{Application.banned}" #{if request.action.contains('banned')||(rental?.banned)} class="selected"#{/if} >&#9760; Les annonces bannies (<span id="banned">${bannedCount}</span>)</a>
+			<a href="@{Application.suggestion}" #{if request.action.contains('suggestion')||(rental?.suggested)} class="selected"#{/if}>&#9733; Suggestions de Pap etc... (${suggestedCount})</a>
+			<hr/>
+			<a href="@{Rentals.blank}" title="ajouter une nouvelle annonce">ajouter une nouvelle annonce</a>
+	    </div>
+		<div class="main">	
+        #{doLayout /}
+		<div>
+
+    </body>
+</html>

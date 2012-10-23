@@ -1,0 +1,19 @@
+#{extends 'main.html' /}
+#{set title:'Maison' /}
+<div class="rentals">
+    #{list items:rentals, as:'rental'}
+    <div class="pavement">
+    <li class="rental favorite" onclick="javascript:document.location = '@{Application.rental}?id=${rental.id}';">
+   
+       <h1>${rental.address ? rental.address : rental.name} </h1>
+       <hr/>
+       <p class="description">
+        ${rental.text.nl2br()}
+       </p>
+    </li>
+    <span class="badges">${rental.notes.size()}</span>
+    
+    </div>
+    #{/list}
+</ul>
+
