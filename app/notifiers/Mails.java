@@ -10,8 +10,8 @@ public class Mails extends Mailer {
 	 public static void newRentals(List<Rental> rentals) {
 	      setSubject("De nouvelles annonces ont été récupérées");
 	      setFrom("locations@sebcreme.fr");
-	      addRecipient("sebastien.creme@gmail.com");
-          addRecipient("mlbayle@gmail.com");
+	      addRecipient("julien.tricoire@gmail.com");
+          addRecipient("sebastien.creme@gmail.com");
 	      send(rentals);
 	   }
 }

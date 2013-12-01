@@ -1,4 +1,15 @@
 #{extends 'main.html' /}
+<div>
+     #{if rental.prev()}
+        <a href="@{Application.rental}?id=${rental.prev().id}" title="Annonce Précédente" style="float:left"> << Annonce plus récente</a>
+    #{/if}
+    #{if rental.next()}
+        <a href="@{Application.rental}?id=${rental.next().id}" title="Annonce Suivante" style="float:right"> Annonce plus ancienne >></a>
+    #{/if}
+    
+    
+ 
+</div>
 <div id="rental-detail" class="rental">
     <h1>${rental.name}</h1>
     #{if rental.address}
@@ -20,10 +31,10 @@
         
         <strong>&#9998;</strong><a href="@{Rentals.show(rental.id)}">Editer</a> - 
         #{if rental.type == 'PAP' || rental.type==null}
-        <a href="http://www.pap.fr/annonce/r${rental.externalId}">Voir sur PAP</a>
+        <a href="${rental.href}">Voir sur PAP</a>
         #{/if}
         #{else}
-        <a href="http://www.leboncoin.fr/locations/${rental.externalId}.htm">Voir sur Le Bon Coin</a>
+        <a href="${rental.href}">Voir sur Le Bon Coin</a>
         #{/else}
         
     </p>

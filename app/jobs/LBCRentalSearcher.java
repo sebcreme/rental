@@ -24,7 +24,7 @@ import org.jsoup.select.*;
 @Every("5mn")
 public class LBCRentalSearcher extends Job{
 private static List<String> locations = new ArrayList<String>(
-	Arrays.asList("Paris%2075011", "Paris%2075010", "Paris%2075020", "Montreuil%2093100"));
+	Arrays.asList("Paris%2075020", "Paris%2075019", "Paris%2075018", "Montreuil%2075010"));
 public void doJob() throws Exception {
 		Logger.info("Searching for new rentals on LeBonCoin...");
 		List<Rental> found = suggestLeBonCoinRentals();
@@ -36,9 +36,9 @@ private static Pattern lbcRentalId = Pattern.compile("locations/(\\d*)");
 public static List<Rental> suggestLeBonCoinRentals() throws Exception{
 	List<Rental> found = new ArrayList<Rental>();
 	for (String location : locations){
-		String lbcPage = WS.url("http://www.leboncoin.fr/locations/offres/ile_de_france/paris/?sqs=7&ros=3&ret=1&ret=2&location="+location).get().getString();
+		String lbcPage = WS.url("http://www.leboncoin.fr/locations/offres/ile_de_france/paris/?f=a&th=1&mrs=600&mre=900&sqs=3&ros=2&roe=2&ret=1&ret=2&furn=2&location="+location).get().getString();
 		Document doc = Jsoup.parse(lbcPage);
-		Elements rentalLinks = doc.select(".list-ads a");
+		Elements rentalLinks = doc.select(".list-lbc a");
 
 		for (Element link : rentalLinks) {
 		  String linkHref = link.attr("href");
@@ -46,6 +46,11 @@ public static List<Rental> suggestLeBonCoinRentals() throws Exception{
 		  String lbcRental = WS.url(linkHref).get().getString();
 		  Document rentalDoc = Jsoup.parse(lbcRental);
 		  String description = rentalDoc.select("div .AdviewContent .content").html();
+		  String image = rentalDoc.select("div .images_cadre a").attr("style");
+		  if (image.indexOf("'") > 0) {
+		  	Logger.debug(image.split("'")[1]);
+		  	description +="<a href=\""+linkHref+"\" target=\"_blank\"><img src=\""+image.split("'")[1]+"\"></a>\n";
+		  }
 		  Rental rental = new Rental();
 		  rental.type="LBC";
 		  rental.suggested = true;

@@ -42,7 +42,6 @@ public class Application extends Controller {
 		Collections.sort(rentals);
 		render("Application/index.html",rentals);
 	}
-	
 	public static void suggestion() {
 		List<Rental> rentals  = Rental.find("suggested is true order by whenAdded desc").fetch();
 		render("Application/index.html",rentals);
@@ -72,7 +71,7 @@ public class Application extends Controller {
 		index();
 	}
 	public static void test() throws Exception{
-		LBCRentalSearcher.suggestLeBonCoinRentals();
+		new PAPRentalSearcher().doJob();
 	}
 	
 }

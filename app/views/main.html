@@ -25,6 +25,9 @@
 			<a href="@{Application.suggestion}" #{if request.action.contains('suggestion')||(rental?.suggested)} class="selected"#{/if}>&#9733; Suggestions de Pap etc... (${suggestedCount})</a>
 			<hr/>
 			<a href="@{Rentals.blank}" title="ajouter une nouvelle annonce">ajouter une nouvelle annonce</a>
+            <hr/>
+           
+
 	    </div>
 		<div class="main">	
         #{doLayout /}
