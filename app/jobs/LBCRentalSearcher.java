@@ -22,7 +22,7 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 
 
-@Every("1mn")
+@Every("5mn")
 public class LBCRentalSearcher extends Job{
 private static Pattern lbcRentalId = Pattern.compile("locations/(\\d*)");
 
