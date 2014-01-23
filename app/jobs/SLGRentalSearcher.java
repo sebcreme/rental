@@ -53,7 +53,6 @@ public class SLGRentalSearcher extends Job{
                 doc = Jsoup.parse(slgPage);
             }
             Elements rentalArticles = doc.select("article.annonce");
-           
             for (Element rentalArticle : rentalArticles) {
                 Rental rental = new Rental();
                 rental.externalId = rentalArticle.id();
