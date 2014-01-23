@@ -71,7 +71,7 @@ public class Application extends Controller {
 		index();
 	}
 	public static void test() throws Exception{
-		new PAPRentalSearcher().doJob();
+		new SLGRentalSearcher().doJob();
 	}
 	
 }

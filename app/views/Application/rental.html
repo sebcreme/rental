@@ -33,9 +33,12 @@
         #{if rental.type == 'PAP' || rental.type==null}
         <a href="${rental.href}">Voir sur PAP</a>
         #{/if}
-        #{else}
+        #{if rental.type == 'LBC'}
         <a href="${rental.href}">Voir sur Le Bon Coin</a>
-        #{/else}
+        #{/if}
+        #{if rental.type == 'SLG'}
+        <a href="${rental.href}">Voir sur SE LOGER</a>
+        #{/if}
         
     </p>
     #{list items:rental.notes, as:'note'}

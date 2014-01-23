@@ -42,7 +42,7 @@ public static List<Rental> suggestLeBonCoinRentals() throws Exception{
 		Logger.info(lbcUrl);
 		String lbcPage = WS.url(lbcUrl).get().getString();
 		Document doc = Jsoup.parse(lbcPage);
-		Elements rentalLinks = doc.select(".list-lbc a");
+		Elements rentalLinks = doc.select("article.annonce");
 
 		for (Element link : rentalLinks) {
 		  String linkHref = link.attr("href");
