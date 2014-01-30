@@ -33,13 +33,8 @@ public class SLGRentalSearcher extends Job{
 		if (!found.isEmpty()) Mails.newRentals(found);
 	}
 	
-
-	private static Pattern rentalId = Pattern.compile("article class=\"annonce \" id=\"annonce-(\\w*)",Pattern.MULTILINE+Pattern.DOTALL);
-	private static Pattern annonceText = Pattern.compile("<p.*?>(.*?)</p>", Pattern.MULTILINE+Pattern.DOTALL);
-	
 	public static List<Rental> suggestSELOGERRentals(){
 	    List<Rental> found = new ArrayList<Rental>();
-
         String slgUrl = Play.configuration.getProperty("slg.url");
         String slgPage = WS.url(slgUrl).timeout("30s").get().getString();
         Document doc = Jsoup.parse(slgPage);
@@ -74,6 +69,7 @@ public class SLGRentalSearcher extends Job{
                         if(null!=titleElement)sb.append(titleElement.text());
                         sb.append(" ");
                         if(null!=priceElement)sb.append(priceElement.text());
+                        sb.append(" ");
                         sb.append("</br>");
                         if(null!=descElement)sb.append(descElement.text());
                         Element picElement = rentalText.select("img.carrousel_image_small").first();
