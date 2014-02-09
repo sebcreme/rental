@@ -15,6 +15,7 @@ import play.Invoker.Invocation;
 import play.jobs.Every;
 import play.jobs.*;
 import play.libs.WS;
+import play.libs.URLs;
 
 import org.jsoup.*;
 import org.jsoup.nodes.*;
@@ -23,22 +24,25 @@ import org.jsoup.select.*;
 
 @Every("5mn")
 public class LBCRentalSearcher extends Job{
-private static List<String> locations = new ArrayList<String>(
-	Arrays.asList("Paris%2075020", "Paris%2075019", "Paris%2075018", "Montreuil%2075010"));
+private static Pattern lbcRentalId = Pattern.compile("locations/(\\d*)");
+
 public void doJob() throws Exception {
 		Logger.info("Searching for new rentals on LeBonCoin...");
 		List<Rental> found = suggestLeBonCoinRentals();
 		Logger.info("Have found %d rental(s) on LEBONCOIN", found.size());
 		if (!found.isEmpty()) Mails.newRentals(found);
 }
-private static Pattern lbcRentalId = Pattern.compile("locations/(\\d*)");
 
 public static List<Rental> suggestLeBonCoinRentals() throws Exception{
+	String[] locationsArray = Play.configuration.getProperty("lbc.locations").split(",");
+	List<String> locations = Arrays.asList(locationsArray);
 	List<Rental> found = new ArrayList<Rental>();
 	for (String location : locations){
-		String lbcPage = WS.url("http://www.leboncoin.fr/locations/offres/ile_de_france/paris/?f=a&th=1&mrs=600&mre=900&sqs=3&ros=2&roe=2&ret=1&ret=2&furn=2&location="+location).get().getString();
+		String lbcUrl = Play.configuration.get("lbc.url")+location;
+		Logger.info(lbcUrl);
+		String lbcPage = WS.url(lbcUrl).get().getString();
 		Document doc = Jsoup.parse(lbcPage);
-		Elements rentalLinks = doc.select(".list-lbc a");
+		Elements rentalLinks = doc.select("article.annonce");
 
 		for (Element link : rentalLinks) {
 		  String linkHref = link.attr("href");
@@ -64,8 +68,6 @@ public static List<Rental> suggestLeBonCoinRentals() throws Exception{
 		  } else {
 	    	Logger.info("Rental {%s} already exists!", rental.externalId);
 	      }
-		
-		  
 		}
 	}
 	return found;

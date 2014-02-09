@@ -4,7 +4,7 @@
         <p>De nouvelles annonces ont été récupérées :</p>
         <ul>
             #{list items:rentals, as:'rental'}
-                <li><a href="http://maison.sebcreme.fr@{Application.rental(rental.id)}">${rental.name}</a><p>${rental.text?.raw()}</p></li>
+                <li><a href="http://nameless-dusk-9264.herokuapp.com@{Application.rental(rental.id)}">${rental.name}</a><p>${rental.text?.raw()}</p></li>
             #{/list}
         </ul>
          

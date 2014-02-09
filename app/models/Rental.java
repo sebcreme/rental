@@ -27,6 +27,7 @@ public class Rental extends Model implements Comparable<Rental>{
 	public String type ="PAP";
 	@OneToMany(cascade=CascadeType.ALL)
 	public List<Note> notes = new ArrayList<Note>();
+	public String href;
     
 	public String toString(){
 		return (address != null && !address.equals("")) ? address : name;
@@ -53,7 +54,7 @@ public class Rental extends Model implements Comparable<Rental>{
 	public String getHref() {
 		if (this.type.equals("PAP")) return "http://www.pap.fr/annonce/r"+ this.externalId;
 		else if (this.type.equals("LBC")) return "http://www.leboncoin.fr/locations/" +this.externalId+".htm";
-		return "aiiiiee";
+		return href;
 	}
 	@Override
 	public int compareTo(Rental o) {
