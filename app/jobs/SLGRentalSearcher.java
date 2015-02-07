@@ -23,7 +23,7 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.*;
  
 
-@Every("5mn")
+
 public class SLGRentalSearcher extends Job{
 	
 	public void doJob() throws Exception {

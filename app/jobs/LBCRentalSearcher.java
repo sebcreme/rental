@@ -24,7 +24,7 @@ import org.jsoup.select.*;
 
 @Every("5mn")
 public class LBCRentalSearcher extends Job{
-private static Pattern lbcRentalId = Pattern.compile("locations/(\\d*)");
+private static Pattern lbcRentalId = Pattern.compile("ventes_immobilieres/(\\d*)");
 
 public void doJob() throws Exception {
 		Logger.info("Searching for new rentals on LeBonCoin...");
@@ -42,22 +42,29 @@ public static List<Rental> suggestLeBonCoinRentals() throws Exception{
 		Logger.info(lbcUrl);
 		String lbcPage = WS.url(lbcUrl).get().getString();
 		Document doc = Jsoup.parse(lbcPage);
-		Elements rentalLinks = doc.select("article.annonce");
+		Elements rentalLinks = doc.select("div.list-lbc > a");
 
 		for (Element link : rentalLinks) {
 		  String linkHref = link.attr("href");
 		  String linkdescription = link.attr("title");
 		  String lbcRental = WS.url(linkHref).get().getString();
+		  
 		  Document rentalDoc = Jsoup.parse(lbcRental);
-		  String description = rentalDoc.select("div .AdviewContent .content").html();
+		  
+		  Integer price = Integer.parseInt(rentalDoc.select("span.price").text().replace("\u00A0", "").replace("€", "").replaceAll(" ",""));
+
+		  String description = rentalDoc.select("div .AdviewContent .content").text();
 		  String image = rentalDoc.select("div .images_cadre a").attr("style");
 		  if (image.indexOf("'") > 0) {
 		  	Logger.debug(image.split("'")[1]);
 		  	description +="<a href=\""+linkHref+"\" target=\"_blank\"><img src=\""+image.split("'")[1]+"\"></a>\n";
 		  }
+
+
 		  Rental rental = new Rental();
 		  rental.type="LBC";
 		  rental.suggested = true;
+		  rental.price = price; 
 		  Matcher matcher = lbcRentalId.matcher(linkHref);
 		  if (matcher.find()) rental.externalId = matcher.group(1);
 		  rental.name = "LBC -- "+rental.externalId;

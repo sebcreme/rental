@@ -28,6 +28,7 @@ public class Rental extends Model implements Comparable<Rental>{
 	@OneToMany(cascade=CascadeType.ALL)
 	public List<Note> notes = new ArrayList<Note>();
 	public String href;
+	public Integer price;
     
 	public String toString(){
 		return (address != null && !address.equals("")) ? address : name;

@@ -8,7 +8,7 @@
        <h1>${rental.address ? rental.address : rental.name} </h1>
        <hr/>
        <p class="description">
-        ${rental.text.nl2br()}
+        ${rental.text.replace("</br>", " ")}
        </p>
     </li>
     <span class="badges">${rental.notes.size()}</span>

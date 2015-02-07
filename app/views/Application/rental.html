@@ -15,7 +15,9 @@
     #{if rental.address}
         <h2><a href="http://maps.google.com/?q=${rental.address}, Paris France">${rental.address}</a></h2>
     #{/if}
-    
+    #{if rental.price}
+        <h2>${rental.price}</h2>
+    #{/if}
     <p>
         ${rental?.text.raw()}
         %{
