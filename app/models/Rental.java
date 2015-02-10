@@ -11,6 +11,7 @@ import org.hibernate.annotations.Type;
 import controllers.Rentals;
 
 import java.util.*;
+import java.text.*;
 
 @Entity
 
@@ -29,11 +30,20 @@ public class Rental extends Model implements Comparable<Rental>{
 	public List<Note> notes = new ArrayList<Note>();
 	public String href;
 	public Integer price;
+	//private static NumberFormat formatter = NumberFormat.getCurrencyInstance();
+	//private static DecimalFormat formatter = new DecimalFormat("###,### ###");
+	private static DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.FRANCE);
+
     
 	public String toString(){
 		return (address != null && !address.equals("")) ? address : name;
 	}
-	
+	public String price(){
+		if (this.price == null) return "Prix Non Renseigné";
+		else {
+			return formatter.format(this.price).trim() + "€";
+		}
+	}
 	public static boolean isExist(Rental rental) {
 		return !Rental.find("byExternalId", rental.externalId).fetch().isEmpty();
 	}

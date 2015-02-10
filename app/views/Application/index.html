@@ -5,7 +5,7 @@
     <div class="pavement">
     <li class="rental favorite" onclick="javascript:document.location = '@{Application.rental}?id=${rental.id}';">
    
-       <h1>${rental.address ? rental.address : rental.name} </h1>
+       <h1>${rental.address ? rental.address : rental.name} </br>${rental.price()}</h1>
        <hr/>
        <p class="description">
         ${rental.text.replace("</br>", " ")}

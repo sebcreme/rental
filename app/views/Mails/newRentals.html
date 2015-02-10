@@ -4,7 +4,11 @@
         <p>De nouvelles annonces ont été récupérées :</p>
         <ul>
             #{list items:rentals, as:'rental'}
-                <li><a href="http://home.sebcre.me@{Application.rental(rental.id)}">${rental.name}</a><p>${rental.text?.raw()}</p></li>
+                <li><a href="http://home.sebcre.me@{Application.rental(rental.id)}">${rental.name}</a>
+                    <p>${rental.price()}</p>
+                    <p>${rental.text?.raw()}</p>
+
+                </li>
             #{/list}
         </ul>
          

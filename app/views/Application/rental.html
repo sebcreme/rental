@@ -11,13 +11,11 @@
  
 </div>
 <div id="rental-detail" class="rental">
-    <h1>${rental.name}</h1>
+    <h1>${rental.name}<br>${rental.price()}</h1>
     #{if rental.address}
         <h2><a href="http://maps.google.com/?q=${rental.address}, Paris France">${rental.address}</a></h2>
     #{/if}
-    #{if rental.price}
-        <h2>${rental.price}</h2>
-    #{/if}
+
     <p>
         ${rental?.text.raw()}
         %{
