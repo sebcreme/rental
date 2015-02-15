@@ -30,8 +30,7 @@ public class Rental extends Model implements Comparable<Rental>{
 	public List<Note> notes = new ArrayList<Note>();
 	public String href;
 	public Integer price;
-	//private static NumberFormat formatter = NumberFormat.getCurrencyInstance();
-	//private static DecimalFormat formatter = new DecimalFormat("###,### ###");
+	public String imgHref;
 	private static DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.FRANCE);
 
     

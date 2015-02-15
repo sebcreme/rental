@@ -1,10 +1,10 @@
 #{extends 'main.html' /}
 <div>
      #{if rental.prev()}
-        <a href="@{Application.rental}?id=${rental.prev().id}" title="Annonce Précédente" style="float:left"> << Annonce plus récente</a>
+        <a href="@{Application.rental}?id=${rental.prev().id}" title="Annonce Précédente" style="float:left"> << Annonce plus ancienne</a>
     #{/if}
     #{if rental.next()}
-        <a href="@{Application.rental}?id=${rental.next().id}" title="Annonce Suivante" style="float:right"> Annonce plus ancienne >></a>
+        <a href="@{Application.rental}?id=${rental.next().id}" title="Annonce Suivante" style="float:right"> Annonce plus récente</a>
     #{/if}
     
     
@@ -18,6 +18,7 @@
 
     <p>
         ${rental?.text.raw()}
+        <img src="${rental.imgHref}"/>
         %{
         TimeZone tz = TimeZone.getTimeZone('Europe/Paris')
         java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMMM yyyy HH:mm")

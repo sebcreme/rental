@@ -22,7 +22,7 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 
 
-@Every("5mn")
+@Every("cron.lbc")
 public class LBCRentalSearcher extends Job{
 private static Pattern lbcRentalId = Pattern.compile("ventes_immobilieres/(\\d*)");
 
@@ -55,9 +55,9 @@ public static List<Rental> suggestLeBonCoinRentals() throws Exception{
 
 		  String description = rentalDoc.select("div .AdviewContent .content").text();
 		  String image = rentalDoc.select("div .images_cadre a").attr("style");
+		  String imgHref = image.split("'")[1];
 		  if (image.indexOf("'") > 0) {
-		  	Logger.debug(image.split("'")[1]);
-		  	description +="<a href=\""+linkHref+"\" target=\"_blank\"><img src=\""+image.split("'")[1]+"\"></a>\n";
+		  	description +="<a href=\""+linkHref+"\" target=\"_blank\"><img src=\""+imgHref+"\"></a>\n";
 		  }
 
 
@@ -70,6 +70,7 @@ public static List<Rental> suggestLeBonCoinRentals() throws Exception{
 		  rental.name = "LBC -- "+rental.externalId;
 		  if (!Rental.isExist(rental)){
 		  	rental.text = linkdescription + "</br>"+ description;
+		  	rental.imgHref = imgHref;
 		  	rental.save();
 		  	found.add(rental);
 		  } else {

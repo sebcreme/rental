@@ -23,7 +23,7 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.*;
  
 
-
+@Every("cron.slg")
 public class SLGRentalSearcher extends Job{
 	
 	public void doJob() throws Exception {
@@ -40,52 +40,41 @@ public class SLGRentalSearcher extends Job{
         Document doc = Jsoup.parse(slgPage);
         Element nbPagesElement = doc.select("span.title_nbresult").first();
         int nbPages = (int)Math.ceil((Integer.parseInt(nbPagesElement.text())/10)+0.5);
+        Logger.debug("Found %d pages", nbPages);
 	    for (int i =1; i<=nbPages; i++){
-
-            if(i>1){
-                slgUrl = Play.configuration.getProperty("slg.url")+i+"";
-                slgPage = WS.url(slgUrl).timeout("30s").get().getString();
-                doc = Jsoup.parse(slgPage);
-            }
-            Elements rentalArticles = doc.select("article.annonce");
+            Logger.debug("Get page %d", i);
+            slgUrl = Play.configuration.getProperty("slg.url")+i+"";
+            Logger.debug("Retrieve URL : %s", slgUrl);
+            slgPage = WS.url(slgUrl).timeout("30s").get().getString();
+            doc = Jsoup.parse(slgPage);
+            Elements rentalArticles = doc.select("article.listing");
             for (Element rentalArticle : rentalArticles) {
                 Rental rental = new Rental();
-                rental.externalId = rentalArticle.id();
-                if(null !=rental.externalId){
-                rental.type="SLG";
-                rental.suggested = true;
-                rental.name = "SLG -- "+rental.externalId;
-                if (!Rental.isExist(rental)){
-                        Logger.info("Rental {%s} seems not existing; retrieve and saving it...", rental.externalId);
-                        Element linkElement = rentalArticle.select("a.annonce__link").first();
-                        String rentalHref = linkElement.attr("href");
-                        rental.href = rentalHref;
-                        String rentalTextPage = WS.url(rentalHref).timeout("10s").get().getString();
-                        Document rentalText = Jsoup.parse(rentalTextPage);
-                        Element titleElement = rentalText.select("h1.detail-title").first();
-                        Element priceElement = rentalText.select(".resume__prix").first();
-                        Element descElement = rentalText.select("p.description").first();
-                        StringBuffer sb = new StringBuffer();
-                        if(null!=titleElement)sb.append(titleElement.text());
-                        sb.append(" ");
-                        if(null!=priceElement)sb.append(priceElement.text());
-                        sb.append(" ");
-                        sb.append("</br>");
-                        if(null!=descElement)sb.append(descElement.text());
-                        Element picElement = rentalText.select("img.carrousel_image_small").first();
-                        if(null!=picElement){
-                            sb.append("</br>");
-                            sb.append(picElement.outerHtml());
-                        }
-                        rental.text = sb.toString();
-                        rental.save();
-                        found.add(rental);
-                } else {
-                    Logger.info("Rental {%s} already exists!", rental.externalId);
-                }   
+                rental.externalId = rentalArticle.attr("data-listing-id");
+                if(null != rental.externalId){
+                    rental.type="SLG";
+                    rental.suggested = true;
+                    rental.name = "SLG -- "+rental.externalId;
+                    if (!Rental.isExist(rental)){
+                            Logger.info("Rental {%s} seems not existing; retrieve and saving it...", rental.externalId);
+                            Element linkElement = rentalArticle.select("div.listing_infos h2 a").first();
+                            String rentalHref = linkElement.attr("href");
+                            rental.href = rentalHref;
+                            //String rentalTextPage = WS.url(rentalHref).timeout("10s").get().getString();
+
+                            rental.text = rentalArticle.select("div.listing_infos p.description").text();
+                            rental.name = linkElement.text();
+                            rental.price = Integer.parseInt(rentalArticle.select("div.listing_infos a.amount").text().replace("\u00A0", "").replace("€", "").replaceAll(" ","").replaceAll("\\.","").replaceAll("FAI", ""));
+                            Element r = rentalArticle.select("div.listing_photo_container img").first();
+                            if (r != null ) rental.imgHref = r.attr("src").replaceAll("c[0-9]{3}", "bigs");
+                            
+                            rental.save();
+                            found.add(rental);
+                    } else {
+                        Logger.info("Rental {%s} already exists!", rental.externalId);
+                    }   
             }
             }
-    		i++;
 		}
 		return found;
 	}

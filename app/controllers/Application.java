@@ -53,12 +53,12 @@ public class Application extends Controller {
 	}
 	public static void ban(Long id) {
 		Rental rental = Rental.findById(id);
+		Rental next = rental.next();
 		rental.banned = true;
-		Boolean wasSuggested = rental.suggested;
 		rental.suggested = false;
 		rental.save();
-		if (wasSuggested) suggestion();
-		index();
+		if (next == null) suggestion();
+		rental(next.id);
 	}
 	public static void unban(Long id) {
 		Rental rental = Rental.findById(id);
@@ -71,7 +71,7 @@ public class Application extends Controller {
 		index();
 	}
 	public static void test() throws Exception{
-		new LBCRentalSearcher().doJob();
+		new SLGRentalSearcher().doJob();
 	}
 	
 }

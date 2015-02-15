@@ -21,7 +21,7 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.*;
  
 
-@Every("5mn")
+@Every("cron.pap")
 public class PAPRentalSearcher extends Job{
 	
 	public void doJob() throws Exception {
@@ -56,8 +56,9 @@ public class PAPRentalSearcher extends Job{
 				rental.href = "http://www.pap.fr/annonces/r" + rental.externalId;
 				rental.text = rentalElt.select("div.description > p").text();
 				rental.name = "PAP -- "+rental.externalId;
+				rental.imgHref = rentalElt.select(".vignette-annonce img").attr("src").replace("thumb.", "");
 				rental.text +="<a href=\""+rental.href+"\" target=\"_blank\">"+
-				"<img src=\""+rentalElt.select(".vignette-annonce img").attr("src").replace("thumb.", "")+"\"></a>\n";
+				"<img src=\""+rental.imgHref+"\"></a>\n";
 				String price = rentalElt.select("span.prix").text().replace("\u00A0", "").replace("€", "").replaceAll(" ","").replaceAll("\\.","");
 				if (price!= null && !price.isEmpty()) rental.price = Integer.parseInt(price);
 				rental.text+= "</br>" + rentalElt.select("div.description  li").text();
