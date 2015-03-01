@@ -7,6 +7,7 @@
                 <li><a href="http://home.sebcre.me@{Application.rental(rental.id)}">${rental.name}</a>
                     <p>${rental.price()}</p>
                     <p>${rental.text?.raw()}</p>
+                    <img src="${rental.imgHref}"/>
                     <p><a href="http://home.sebcre.me@{Application.unban(rental.id)}">Love this !</a></p>
                 </li>
             #{/list}
