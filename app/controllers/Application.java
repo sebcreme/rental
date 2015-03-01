@@ -6,6 +6,7 @@ import models.*;
 import jobs.*;
 import notifiers.Mails;
 
+import play.*;
 import java.util.*;
 import play.libs.*;
 import org.w3c.dom.*;
@@ -72,6 +73,12 @@ public class Application extends Controller {
 	}
 	public static void test() throws Exception{
 		new SLGRentalSearcher().doJob();
+	}
+	public static void testMail() throws Exception{
+		if (Play.mode.isProd()) notFound();
+		List<Rental> rentals  = Rental.find("banned is false order by whenAdded desc limit 5").fetch();
+		Mails.newRentals(rentals);
+		//render("Mails/newRentals.html", rentals);
 	}
 	
 }

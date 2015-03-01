@@ -39,7 +39,7 @@ public class SLGRentalSearcher extends Job{
         String slgPage = WS.url(slgUrl).timeout("30s").get().getString();
         Document doc = Jsoup.parse(slgPage);
         Element nbPagesElement = doc.select("span.title_nbresult").first();
-        int nbPages = (int)Math.ceil((Integer.parseInt(nbPagesElement.text())/10)+0.5);
+        int nbPages = (nbPagesElement == null) ? 1: (int)Math.ceil((Integer.parseInt(nbPagesElement.text())/10)+0.5);
         Logger.debug("Found %d pages", nbPages);
 	    for (int i =1; i<=nbPages; i++){
             Logger.debug("Get page %d", i);

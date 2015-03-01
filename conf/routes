@@ -7,19 +7,21 @@ GET     /                                       Application.index
 GET 	/new									Application.newRental
 GET 	/rental									Application.rental
 GET 	/search									Application.search
-POST	/rate								    Application.rate
-GET 	/rate									Application.rate
 GET 	/banned									Application.banned
 GET 	/ban/{id}							    Application.ban
 GET 	/unban/{id}								Application.unban
+GET     /suggestion                             Application.suggestion
+
 GET     /reset                                  Application.deleteAllSuggestions
 POST	/note								    Application.addNote
-GET		/test									Application.test
 
+# TEST ROUTES
+GET		/test									Application.test
+GET     /testMail                               Application.testMail
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 *      /admin        							module:crud
 
 # Catch all
-*       /{controller}/{action}                  {controller}.{action}
+#*       /{controller}/{action}                  {controller}.{action}

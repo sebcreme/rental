@@ -28,6 +28,7 @@ public class Rental extends Model implements Comparable<Rental>{
 	public String type ="PAP";
 	@OneToMany(cascade=CascadeType.ALL)
 	public List<Note> notes = new ArrayList<Note>();
+	@Lob @Type(type="org.hibernate.type.StringClobType") 
 	public String href;
 	public Integer price;
 	public String imgHref;
